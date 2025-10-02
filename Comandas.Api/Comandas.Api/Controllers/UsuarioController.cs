@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Comandas.Api.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,20 +9,43 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        //Lista Usuarios 
+        List<Usuario> usuarios = new List<Usuario>()
+        {
+            new Usuario
+            {
+            Id = 1,
+            Nome = "Admin",
+            Email = "admin@admin.com",
+            Senha = "admin123"
+            },
+            new Usuario
+            {
+             Id = 1,
+            Nome = "Admin",
+            Email = "admin@admin.com",
+            Senha = "admin123"
+            }
+        };
+
         // GET: api/<UsuarioController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<UsuarioController>/5
+        
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IResult Get(int id)
         {
-            return "value";
+            var usuario = usuarios.FirstOrDefault(u => u.Id == id);
+            if (usuario is null)
+            {
+                return Results.NotFound("Usuário não encontrado!");
+            }
+            return Results.Ok(usuarios);
         }
-
+        // GET api/<UsuarioController>/5
+        [HttpGet]
+        public IResult Get()
+        {
+            return Results.Ok(usuarios);
+        }
         // POST api/<UsuarioController>
         [HttpPost]
         public void Post([FromBody] string value)
