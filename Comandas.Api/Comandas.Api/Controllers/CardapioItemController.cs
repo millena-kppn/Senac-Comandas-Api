@@ -3,79 +3,64 @@ using Microsoft.AspNetCore.Mvc;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 namespace Comandas.Api.Controllers
 {
-    //CRIA A ROTA DO CONTROLADOR
     [Route("api/[controller]")]
-    [ApiController]//DEFINE QUE ESSA CLASSE É UM CONTROLADOR DE API
-    public class CardapioItemController : ControllerBase//HERDA DE ControllerBase para PODER RESPONDER A REQUISIÇOES HTTP
+    [ApiController] //define que essa classe é um controller de API
+    public class CardapioItemController : ControllerBase // herda de ControllerBase para poder responder requisições HTTP
     {
-        //METODO GET QUE RETORNA UMA LISTA DE CARDAPIO
-        // GET: api/<ValuesController>
-        [HttpGet]//ANOTAÇÃO PARA IDENTIFICAR QUE É UM GET
-        public IEnumerable<CardapioItem> GetCardapios()
-        {
-            //CRIA UMA LISTA DE ESTATICA DE CARDAPIO E TRANSFORMA EM JSON
-            return new CardapioItem[]
+        public List<CardapioItem> cardapios = new List<CardapioItem>() {
+            new CardapioItem
             {
-                new CardapioItem {//CRIA O PRIMEIRO ELEMENTO DA LISTA
-                    Id = 1,
-                    Titulo = "X-Carne",
-                    Descricao = "Bife, salada, tomate, alface, maionese",
-                    Preco = 5.00m,
-                    PossuiPreparo = true
-                },
-                new CardapioItem {//CRIA O SEGUNDO ELEMENTO DA LISTA
-                    Id = 2,
-                    Titulo = "X-Frango",
-                    Descricao = "Frango, salada, tomate, alface, maionese",
-                    Preco = 6.00m,
-                    PossuiPreparo = true
-                }
-            };
-        }
-        List<CardapioItem> cardapios = new List<CardapioItem>()
-        {
-            new CardapioItem()
-            {
-                Id = 3,
-                Titulo = "Coxinha de frango com catupiry",
-                Preco = 6.00m,
+                Id = 1,
+                Descricao = "Coxinha",
+                Preco = 5.50m,
                 PossuiPreparo = true
             },
-            new CardapioItem()
+            new CardapioItem
             {
-                Id = 4,
-                Titulo = "Pastel de carne",
-                Preco = 5.00m,
+                Id = 2,
+                Descricao = "X-Salada",
+                Preco = 25.50m,
                 PossuiPreparo = true
             }
         };
-        // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public IResult Get(int id)// 
+        // metodo get que retorna a lista de cardapio
+        // GET: api/<CardapioItemController>
+        [HttpGet] // Anotação que indica que esse método responde a requisições GET
+        public IResult GetCardapios()
         {
-            //BUSCAR NA LISTA O CARDAPIO PELO ID E RETORNAR O OBJETO ENCONTRADO OU NULL SE NÃO ENCONTRAR
-            //JOGA O VALOR PARA VARIAVEL O PRIMEIRO ELEMENTO DE cardapios QUE TIVER O ID IGUAL AO ID PASSADO COMO PARAMETRO
+            //cria uma lista estatica de cardápio e transforma em json
+            return Results.Ok(cardapios);
+        }
+        // GET api/<CardapioItemController>/5
+        [HttpGet("{id}")]
+        public IResult Get(int id)
+        {
+            //BUSCA NA LISTA de cardapios de acordo com ID do parametro
+            //Joga o valor para a variavel o primeiro elemento de acordo com o id
             var cardapio = cardapios.FirstOrDefault(c => c.Id == id);
-            if (cardapio is null)
+            if (cardapio == null)
             {
+                //se nao encontrar o cardapio com o id, retorna 404
                 return Results.NotFound("Cardápio não encontrado!");
             }
-            //RETORNA O OBJETO ENCONTRADO OU NULL
+            //retorna o valor para o endpoint da api
             return Results.Ok(cardapio);
+
         }
-        // POST api/<ValuesController>
+
+        // POST api/<CardapioItemController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<ValuesController>/5
+        // PUT api/<CardapioItemController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<ValuesController>/5
+        // DELETE api/<CardapioItemController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
