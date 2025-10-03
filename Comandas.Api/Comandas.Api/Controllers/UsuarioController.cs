@@ -10,7 +10,7 @@ namespace Comandas.Api.Controllers
     public class UsuarioController : ControllerBase
     {
         //Lista Usuarios 
-        List<Usuario> usuarios = new List<Usuario>()
+       static List<Usuario> usuarios = new List<Usuario>()
         {
             new Usuario
             {
@@ -21,15 +21,22 @@ namespace Comandas.Api.Controllers
             },
             new Usuario
             {
-             Id = 1,
-            Nome = "Admin",
-            Email = "admin@admin.com",
-            Senha = "admin123"
+            Id = 1,
+            Nome = "Usuario",
+            Email = "usuario@usuario.com",
+            Senha = "usuario123"
             }
         };
 
-        // GET: api/<UsuarioController>
-        
+        // GET api/<UsuarioController>
+        [HttpGet]
+        public IResult Get()
+        {
+            return Results.Ok(usuarios);// TIRAR????
+        }
+
+        // GET: api/<UsuarioController>/5
+
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
@@ -38,21 +45,16 @@ namespace Comandas.Api.Controllers
             {
                 return Results.NotFound("Usuário não encontrado!");
             }
-            return Results.Ok(usuarios);
+            return Results.Ok(usuario);
         }
-        // GET api/<UsuarioController>/5
-        [HttpGet]
-        public IResult Get()
-        {
-            return Results.Ok(usuarios);
-        }
+ 
         // POST api/<UsuarioController>
         [HttpPost]
-        public void Post([FromBody] Usuario usuario)
+        public IResult Post([FromBody] Usuario usuario)
         {
             //adiciona um usuario na lista
             usuarios.Add(usuario);
-            CreatedAtAction(nameof(Get), new { id = usuario.Id }, usuario);
+            return Results.Created($"/api/usuario/{usuario.Id}", usuario);
         }
 
         // PUT api/<UsuarioController>/5
