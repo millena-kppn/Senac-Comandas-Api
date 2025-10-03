@@ -48,8 +48,11 @@ namespace Comandas.Api.Controllers
         }
         // POST api/<UsuarioController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Usuario usuario)
         {
+            //adiciona um usuario na lista
+            usuarios.Add(usuario);
+            CreatedAtAction(nameof(Get), new { id = usuario.Id }, usuario);
         }
 
         // PUT api/<UsuarioController>/5
