@@ -1,4 +1,5 @@
-﻿using Comandas.Api.Models;
+﻿using Comandas.Api.DTOs;
+using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -32,7 +33,7 @@ namespace Comandas.Api.Controllers
         [HttpGet]
         public IResult Get()
         {
-            return Results.Ok(usuarios);// TIRAR????
+            return Results.Ok(usuarios);
         }
 
         // GET: api/<UsuarioController>/5
@@ -50,8 +51,27 @@ namespace Comandas.Api.Controllers
  
         // POST api/<UsuarioController>
         [HttpPost]
-        public IResult Post([FromBody] Usuario usuario)
+        public IResult Post([FromBody] UsuarioCreateRequest usuarioCreate)
         {
+            if( usuarioCreate.Senha.Length < 6)
+            {
+                return Results.BadRequest("A senha deve ter no mínimo 6 caracteres.");
+            }
+            if (usuarioCreate.Nome.Length < 3)
+            {
+                return Results.Conflict("O nome deve ter no mínimo 3 caracteres.");
+            }
+            if (usuarioCreate.Email.Length < 5 || !usuarioCreate.Email.Contains("@"))
+            {
+                return Results.Conflict("O email deve ser válido.");
+            }
+            var usuario = new Usuario
+            {
+                Id = usuarios.Count + 1,
+                Nome = usuarioCreate.Nome,
+                Email = usuarioCreate.Email,
+                Senha = usuarioCreate.Senha
+            };
             //adiciona um usuario na lista
             usuarios.Add(usuario);
             return Results.Created($"/api/usuario/{usuario.Id}", usuario);
@@ -59,7 +79,7 @@ namespace Comandas.Api.Controllers
 
         // PUT api/<UsuarioController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] UsuarioUpdateRequest usuarioUpdate)
         {
         }
 
