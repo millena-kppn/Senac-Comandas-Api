@@ -76,13 +76,23 @@ namespace Comandas.Api.Controllers
             usuarios.Add(usuario);
             return Results.Created($"/api/usuario/{usuario.Id}", usuario);
         }
-
+        //ATUALIZA UM USUARIO
         // PUT api/<UsuarioController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] UsuarioUpdateRequest usuarioUpdate)
+        public IResult Put(int id, [FromBody] UsuarioUpdateRequest usuarioUpdate)
         {
+            //BUSCA O USUARIO NA LISTA DO ID
+            var usuario = usuarios.FirstOrDefault(u => u.Id == id);
+            //SE NAO ENCONTRAR RETORNA NOTFOUND
+            if (usuario is null)
+                return Results.NotFound($"Usuário do id {id} não encontrado.");
+            //SE ENCONTRAR ATUALIZA OS DADOS DO USUARIO
+            usuario.Nome = usuarioUpdate.Nome;
+            usuario.Email = usuarioUpdate.Email;
+            usuario.Senha = usuarioUpdate.Senha;
+            //RETORNA NO CONTENT
+            return Results.NoContent();
         }
-
         // DELETE api/<UsuarioController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
