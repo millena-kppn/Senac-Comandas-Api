@@ -2,8 +2,9 @@
 {
     public class ComandaUpdateRequest
     {
-        public int NuneroMesa { get; set; }
+        //adicionar duas propiedades:
+        //NomeCliente e NumeroMesa
         public string NomeCliente { get; set; } = default!;
-        public int[] cardapioItens { get; set; } = default!;
+        public int NumeroMesa { get; set; }
     }
 }
