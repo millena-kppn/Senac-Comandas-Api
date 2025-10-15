@@ -100,6 +100,10 @@ namespace Comandas.Api.Controllers
             var comanda = comandas.FirstOrDefault(c => c.Id == id);
             if (comanda is null)
                 return Results.NotFound("Comanda não encontrada!");
+            if (comandaUpdate.NomeCliente.Length < 3)
+                return Results.BadRequest("O nome do cliente deve ter no mínimo 3 caracteres.");
+            if (comandaUpdate.NumeroMesa <= 0)
+                return Results.BadRequest("O número da mesa deve ser maior que zero.");
             //atualiza as informações da comanda
             comanda.NomeCliente = comandaUpdate.NomeCliente;
             comanda.NuneroMesa = comandaUpdate.NumeroMesa;
