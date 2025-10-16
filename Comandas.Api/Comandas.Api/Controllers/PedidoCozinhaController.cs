@@ -9,7 +9,7 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class PedidoCozinhaController : ControllerBase
     {
-        List<PedidoCozinha> pedidos = new List<PedidoCozinha>()
+       static List<PedidoCozinha> pedidos = new List<PedidoCozinha>()
         {
             new PedidoCozinha
             {

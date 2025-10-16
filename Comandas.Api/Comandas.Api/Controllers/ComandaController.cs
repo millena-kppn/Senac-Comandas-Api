@@ -113,8 +113,21 @@ namespace Comandas.Api.Controllers
 
         // DELETE api/<ComandaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            //pesquisa uma comanda na Lista de comandas pelo ID de comanda
+            //que veio no paremetro da REQUSET
+            var comanda = comandas.FirstOrDefault(c => c.Id == id);
+            //se não encontrou a comanda pesquisa
+            if (comanda is null)
+            //retorna um codigo 404 não encontrado
+                return Results.NotFound("Comandas não encontrada");
+            //remove a comanda da lista de comandas 
+            var removidosComSucesso = comandas.Remove(comanda);
+            if (removidosComSucesso)
+            //retorna 204 sem conteudo
+                return Results.NoContent();
+            return Results.StatusCode(500);
         }
     }
 }

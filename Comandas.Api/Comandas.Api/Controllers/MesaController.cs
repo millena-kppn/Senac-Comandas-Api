@@ -11,7 +11,7 @@ namespace Comandas.Api.Controllers
     public class MesaController : ControllerBase
     {
 
-        List<Mesa> mesas = new List<Mesa>()
+       static List<Mesa> mesas = new List<Mesa>()
         {
             new Mesa
             {

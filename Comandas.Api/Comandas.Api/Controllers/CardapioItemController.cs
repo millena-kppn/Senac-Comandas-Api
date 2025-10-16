@@ -8,7 +8,7 @@ namespace Comandas.Api.Controllers
     [ApiController] //define que essa classe é um controller de API
     public class CardapioItemController : ControllerBase // herda de ControllerBase para poder responder requisições HTTP
     {
-        public List<CardapioItem> cardapios = new List<CardapioItem>() {
+        static public List<CardapioItem> cardapios = new List<CardapioItem>() {
             new CardapioItem
             {
                 Id = 1,
@@ -75,7 +75,7 @@ namespace Comandas.Api.Controllers
 
         // PUT api/<CardapioItemController>/5
         [HttpPut("{id}")]
-        public IResult Put(int id, [FromBody] CardapioItemUpdateRequest cardapio)
+        static IResult Put(int id, [FromBody] CardapioItemUpdateRequest cardapio)
         {
             var cardapioItem = cardapios.FirstOrDefault(c => c.Id == id);
             if (cardapioItem is null)
@@ -89,8 +89,21 @@ namespace Comandas.Api.Controllers
 
         // DELETE api/<CardapioItemController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            //busca o cardapio na lista pelo id
+            var cardapioItem = cardapios
+                .FirstOrDefault(c => c.Id == id);
+            //se estiver nulo, retorna 404
+            if (cardapioItem is null)
+                return Results.NotFound($"Cardápio {id} não encontrado!");
+            //remove o cardapio da lista
+            var removidoComSucesso = cardapios.Remove(cardapioItem);
+            //se removido com sucesso, retorna 204
+            if (removidoComSucesso)
+                return Results.NoContent();
+            //se nao, retorna 500
+                return Results.StatusCode(500);
         }
     }
 }
