@@ -11,7 +11,7 @@ namespace Comandas.Api.Controllers
     public class UsuarioController : ControllerBase
     {
         //variavel estatica para simular um banco de dados
-        public ComandasDbContext _context; { get; set; }
+        public ComandasDbContext _context { get; set; }
         //lista estatica de usuarios
         public UsuarioController(ComandasDbContext context)
         {
@@ -99,7 +99,7 @@ namespace Comandas.Api.Controllers
             if (usuarioLista is null)
                 return Results.NotFound($"Usuario {id} não encontrado!");
             //remove o usuario da lista
-               _context.Usuarios.Remove(usuarioLista);
+            _context.Usuarios.Remove(usuarioLista);
             //salva as alteracoes no banco de dados
             _context.SaveChanges();
             //retorna no content
