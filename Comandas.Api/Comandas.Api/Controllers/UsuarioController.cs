@@ -22,6 +22,9 @@ namespace Comandas.Api.Controllers
         [HttpGet]
         public IResult Get()
         {
+            //conecta com o banco de dados
+            //retorna todos os usuarios da lista
+            var usuarios = _context.Usuarios.ToList();
             return Results.Ok(usuarios);
         }
 
@@ -30,7 +33,7 @@ namespace Comandas.Api.Controllers
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
-            var usuario = usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == id);
             if (usuario is null)
             {
                 return Results.NotFound("Usuário não encontrado!");
@@ -56,13 +59,15 @@ namespace Comandas.Api.Controllers
             }
             var usuario = new Usuario
             {
-                Id = usuarios.Count + 1,
+              
                 Nome = usuarioCreate.Nome,
                 Email = usuarioCreate.Email,
                 Senha = usuarioCreate.Senha
             };
-            //adiciona um usuario na lista
-            usuarios.Add(usuario);
+            //adiciona o usuario no Contexto do banco de dados
+            _context.Usuarios.Add(usuario);
+            //salva as alteracoes no banco de dados
+            _context.SaveChanges();
             return Results.Created($"/api/usuario/{usuario.Id}", usuario);
         }
         //ATUALIZA UM USUARIO
@@ -71,7 +76,7 @@ namespace Comandas.Api.Controllers
         public IResult Put(int id, [FromBody] UsuarioUpdateRequest usuarioUpdate)
         {
             //BUSCA O USUARIO NA LISTA DO ID
-            var usuario = usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == id);
             //SE NAO ENCONTRAR RETORNA NOTFOUND
             if (usuario is null)
                 return Results.NotFound($"Usuário do id {id} não encontrado.");
@@ -79,6 +84,8 @@ namespace Comandas.Api.Controllers
             usuario.Nome = usuarioUpdate.Nome;
             usuario.Email = usuarioUpdate.Email;
             usuario.Senha = usuarioUpdate.Senha;
+            //SALVA AS ALTERACOES NO BANCO DE DADOS
+            _context.SaveChanges();
             //RETORNA NO CONTENT
             return Results.NoContent();
         }
@@ -87,17 +94,16 @@ namespace Comandas.Api.Controllers
         public IResult Delete(int id)
         {
             //busca o usuario na lista pelo id
-            var usuarioLista = usuarios.FirstOrDefault(c => c.Id == id);
+            var usuarioLista = _context.Usuarios.FirstOrDefault(c => c.Id == id);
             ////se estiver nulo, retorna 404
             if (usuarioLista is null)
                 return Results.NotFound($"Usuario {id} não encontrado!");
             //remove o usuario da lista
-            var removidoComSucessoUsuario = usuarios.Remove(usuarioLista);
-            //se removido com sucesso, retorna 204
-            if (removidoComSucessoUsuario)
-                return Results.NoContent();
-            //se nao, retorna 500
-            return Results.StatusCode(500);
+               _context.Usuarios.Remove(usuarioLista);
+            //salva as alteracoes no banco de dados
+            _context.SaveChanges();
+            //retorna no content
+            return Results.NoContent();
         }
     }
 }
