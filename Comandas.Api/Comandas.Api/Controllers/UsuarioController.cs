@@ -10,24 +10,13 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-        //Lista Usuarios 
-       static List<Usuario> usuarios = new List<Usuario>()
+        //variavel estatica para simular um banco de dados
+        public ComandasDbContext _context; { get; set; }
+        //lista estatica de usuarios
+        public UsuarioController(ComandasDbContext context)
         {
-            new Usuario
-            {
-            Id = 1,
-            Nome = "Admin",
-            Email = "admin@admin.com",
-            Senha = "admin123"
-            },
-            new Usuario
-            {
-            Id = 1,
-            Nome = "Usuario",
-            Email = "usuario@usuario.com",
-            Senha = "usuario123"
-            }
-        };
+            _context = context;
+        }
 
         // GET api/<UsuarioController>
         [HttpGet]
