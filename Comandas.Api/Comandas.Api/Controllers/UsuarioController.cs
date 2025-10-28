@@ -40,12 +40,12 @@ namespace Comandas.Api.Controllers
             }
             return Results.Ok(usuario);
         }
- 
+
         // POST api/<UsuarioController>
         [HttpPost]
         public IResult Post([FromBody] UsuarioCreateRequest usuarioCreate)
         {
-            if( usuarioCreate.Senha.Length < 6)
+            if (usuarioCreate.Senha.Length < 6)
             {
                 return Results.BadRequest("A senha deve ter no mínimo 6 caracteres.");
             }
@@ -59,7 +59,7 @@ namespace Comandas.Api.Controllers
             }
             var usuario = new Usuario
             {
-              
+
                 Nome = usuarioCreate.Nome,
                 Email = usuarioCreate.Email,
                 Senha = usuarioCreate.Senha
