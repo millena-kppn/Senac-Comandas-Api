@@ -1,60 +1,30 @@
 ﻿using Comandas.Api.DTOs;
 using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
-
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Comandas.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ComandaController : ControllerBase
     {
-       static List<Comanda> comandas = new List<Comanda>()
+        public ComandasDbContext _context { get; set; }
+        public ComandaController(ComandasDbContext context)
         {
-            new Comanda
-            {
-               Id = 1,
-               NomeCliente = "João Queiroz",
-               NuneroMesa = 1,
-               Itens = new List<ComandaItem>()
-               {
-                  new ComandaItem
-                  {
-                   Id = 1,
-                   CardapioItemId = 1,
-                   ComandaId = 1,
-                  }
-               } 
-            },
-            new Comanda
-            {
-               Id = 2,
-               NomeCliente = "Maria Silva",
-               NuneroMesa = 2,
-               Itens = new List<ComandaItem>()
-               {
-                  new ComandaItem
-                  {
-                   Id = 2,
-                   CardapioItemId = 2,
-                   ComandaId = 2,
-                  }
-               }
-            }
-        };
+            _context = context;
+        }
         // GET: api/<ComandaController>
         [HttpGet]
         public IResult Get()
         {
+            var comandas = _context.Comandas.ToList();
             return Results.Ok(comandas);
         }
-
         // GET api/<ComandaController>/5
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
-            var comanda = comandas.FirstOrDefault(c => c.Id == id);
+            var comanda = _context.Comandas.FirstOrDefault(c => c.Id == id);
             if (comanda is null)
             {
                 return Results.NotFound("Comanda não encontrada!");
@@ -72,7 +42,6 @@ namespace Comandas.Api.Controllers
                 return Results.BadRequest("O nome do cliente deve ter no mínimo 3 caracteres.");
             var Novacomanda = new Comanda
             {
-                Id = comandas.Count + 1,
                 NomeCliente = comandaCreate.NomeCliente,
                 NuneroMesa = comandaCreate.NumeroMesa,
             };
@@ -81,15 +50,22 @@ namespace Comandas.Api.Controllers
             {
                 var comandaItem = new ComandaItem
                 {
-                    Id = comandaItens.Count + 1,
                     CardapioItemId = cardapioItemId,
-                    ComandaId = Novacomanda.Id,
+                    Comanda = Novacomanda,
                 };
                 comandaItens.Add(comandaItem);
+
+                //Criar o pedidio de cozinha de acordo com o cadastro do cardapio possui preparo
+                var cardapioItem = _context.CardapioItems.FirstOrDefault(c => c.Id == cardapioItemId);
             }
             Novacomanda.Itens = comandaItens;
-            comandas.Add(Novacomanda);
+            _context.Comandas.Add(Novacomanda);
+            _context.SaveChanges();
             return Results.Created($"/api/comanda/{Novacomanda.Id}", Novacomanda);
+
+
+            //CONTINUAR A EDITAR AQUI
+
 
         }
 
@@ -120,12 +96,12 @@ namespace Comandas.Api.Controllers
             var comanda = comandas.FirstOrDefault(c => c.Id == id);
             //se não encontrou a comanda pesquisa
             if (comanda is null)
-            //retorna um codigo 404 não encontrado
+                //retorna um codigo 404 não encontrado
                 return Results.NotFound("Comandas não encontrada");
             //remove a comanda da lista de comandas 
             var removidosComSucesso = comandas.Remove(comanda);
             if (removidosComSucesso)
-            //retorna 204 sem conteudo
+                //retorna 204 sem conteudo
                 return Results.NoContent();
             return Results.StatusCode(500);
         }
