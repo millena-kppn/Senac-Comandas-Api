@@ -57,6 +57,18 @@ namespace Comandas.Api.Controllers
 
                 //Criar o pedidio de cozinha de acordo com o cadastro do cardapio possui preparo
                 var cardapioItem = _context.CardapioItems.FirstOrDefault(c => c.Id == cardapioItemId);
+                if (cardapioItem!.PossuiPreparo)//compara se o item do cardapio possui preparo
+                {
+                    var pedido = new PedidoCozinha
+                    {
+                      Comanda = Novacomanda,
+                    };
+                    var pedidoItem = new PedidoCozinhaItem
+                    {
+                        ComandaItem = comandaItem,
+                        PedidoCozinha = pedido
+                    };
+                }
             }
             Novacomanda.Itens = comandaItens;
             _context.Comandas.Add(Novacomanda);
