@@ -13,6 +13,7 @@ namespace Comandas.Api
         public DbSet<Models.Comanda> Comandas { get; set; } = default!;
         public DbSet<Models.ComandaItem> ComandaItens { get; set; } = default!;
         public DbSet<Models.PedidoCozinha> PedidoCozinhas { get; set; } = default!;
+        public DbSet<Models.PedidoCozinhaItem> PedidoCozinhaItens { get; set; } = default!;
         public DbSet<Models.CardapioItem> CardapioItems{ get; set; } = default!;
     }
 }

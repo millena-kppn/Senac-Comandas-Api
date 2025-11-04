@@ -68,6 +68,8 @@ namespace Comandas.Api.Controllers
                         ComandaItem = comandaItem,
                         PedidoCozinha = pedido
                     };
+                    _context.PedidoCozinhas.Add(pedido);
+                    _context.PedidoCozinhaItens.Add(pedidoItem);
                 }
             }
             Novacomanda.Itens = comandaItens;
