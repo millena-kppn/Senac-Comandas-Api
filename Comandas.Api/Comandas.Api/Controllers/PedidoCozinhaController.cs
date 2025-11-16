@@ -1,7 +1,6 @@
-﻿using Comandas.Api.Models;
+﻿using Comandas.Api.DTOs;
+using Comandas.Api.Models;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Comandas.Api.Controllers
 {
@@ -9,17 +8,17 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class PedidoCozinhaController : ControllerBase
     {
-       static List<PedidoCozinha> pedidos = new List<PedidoCozinha>()
+        static List<PedidoCozinha> pedidos = new List<PedidoCozinha>()
         {
             new PedidoCozinha
             {
-               Id = 1,
-               ComandaId = 1,
+                Id = 1,
+                ComandaId = 1,
             },
             new PedidoCozinha
             {
-               Id = 2,
-               ComandaId = 2,
+                Id = 2,
+                ComandaId = 2,
             }
         };
         // GET: api/<PedidoCozinhaController>
@@ -33,17 +32,16 @@ namespace Comandas.Api.Controllers
         [HttpGet("{id}")]
         public IResult Get(int id)
         {
-            var pedido = pedidos.FirstOrDefault(p => p.Id == id);
+            var pedido = pedidos
+                .FirstOrDefault(p => p.Id == id);
             if (pedido is null)
-            {
-                return Results.NotFound("Pedido não encontrado!");
-            }
+                return Results.NotFound("Pedido não encontrado");
             return Results.Ok(pedido);
         }
 
         // POST api/<PedidoCozinhaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] PedidoCozinhaCreateRequest pedido)
         {
         }
 
@@ -55,9 +53,19 @@ namespace Comandas.Api.Controllers
 
         // DELETE api/<PedidoCozinhaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IResult Delete(int id)
         {
+            var pedido = pedidos
+                .FirstOrDefault(p => p.Id == id);
 
+            if (pedido is null)
+                return Results.NotFound($"Pedido {id} não encontrado");
+
+            var removidoComSucesso = pedidos.Remove(pedido);
+            if (removidoComSucesso)
+                return Results.NoContent();
+
+            return Results.StatusCode(500);
         }
     }
 }
