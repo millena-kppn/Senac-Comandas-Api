@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comandas.Api.Models
@@ -12,5 +13,7 @@ namespace Comandas.Api.Models
         public string Descricao { get; set; } = default!;
         public decimal Preco { get; set; }
         public bool PossuiPreparo { get; set; }
+        public int? CategoriaCardapioId { get; set; }
+        public CategoryAttribute? CategoriaCardapio { get; set; }
     }
 }
